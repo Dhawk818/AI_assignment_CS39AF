@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>OmniAI Sandbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">O</div>
+                <div class="sidebar-header-text">
+                    <div class="app-title">OmniAI</div>
+                    <div class="app-subtitle">Sandbox Console</div>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <button class="nav-item active" data-section="dashboard" title="Dashboard">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+                <button class="nav-item" data-section="modules" title="Modules">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label">Modules</span>
+                </button>
+                <button class="nav-item" data-section="workspaces" title="Workspaces">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label">Workspaces</span>
+                </button>
+                <button class="nav-item" data-section="archives" title="Archives &amp; Transcend">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label">Archives / Transcend</span>
+                </button>
+                <button class="nav-item" data-section="settings" title="Kai Core &amp; Settings">
+                    <span class="nav-dot"></span>
+                    <span class="nav-label">Kai Core / Settings</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="status-dot"></div>
+                <span class="status-text">Kai: Online</span>
+                <span class="status-version">v1.0 UI</span>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="main">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <button class="icon-button" id="sidebar-toggle" aria-label="Toggle navigation">
+                    &#9776;
+                </button>
+                <div class="topbar-title" id="topbar-title">
+                    Dashboard
+                </div>
+                <div class="topbar-right">
+                    <input
+                        type="text"
+                        class="command-input"
+                        placeholder="Type a command or search (e.g., 'launch jargon linker')..."
+                        id="command-input"
+                    />
+                    <div class="command-suggestions" id="command-suggestions">
+                        <button class="chip" data-command="launch jargon linker">Jargon Linker</button>
+                        <button class="chip" data-command="open math mode">Math Mode</button>
+                        <button class="chip" data-command="open dns / network assistant">DNS / Network</button>
+                        <button class="chip" data-command="open digital footprint tools">Footprint Tools</button>
+                        <button class="chip" data-command="open kai core settings">Kai Core</button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <section class="content">
+                <!-- DASHBOARD -->
+                <div class="section active" id="section-dashboard">
+                    <div class="grid grid-2">
+                        <div class="card card-accent">
+                            <h2>Quick Launch</h2>
+                            <p>Jump into your most-used OmniAI tools.</p>
+                            <div class="button-row">
+                                <button class="btn primary" data-action="launch-jargon">
+                                    Launch Jargon Linker
+                                </button>
+                                <button class="btn" data-action="launch-math">
+                                    Math / Tutor Mode
+                                </button>
+                            </div>
+                            <div class="button-row">
+                                <button class="btn" data-action="launch-network">
+                                    Network Lab Assistant
+                                </button>
+                                <button class="btn" data-action="launch-footprint">
+                                    Digital Footprint Tools
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2>Session Overview</h2>
+                            <ul class="session-list">
+                                <li>
+                                    <span class="session-tag">Active</span>
+                                    <div>
+                                        <div class="session-title">Digital Footprint Removal – Phase 1</div>
+                                        <div class="session-meta">Last activity: just now</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="session-tag">Pinned</span>
+                                    <div>
+                                        <div class="session-title">Jargon Linker v1.7 – Recovery System</div>
+                                        <div class="session-meta">Last activity: earlier session</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="session-tag">Sandbox</span>
+                                    <div>
+                                        <div class="session-title">OmniAI Blueprint / Kai Consciousness</div>
+                                        <div class="session-meta">Status: design &amp; prototyping</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card">
+                            <h2>Recent Transcend Bundles</h2>
+                            <ul class="simple-list">
+                                <li>
+                                    <strong>advance phone privacy.zip</strong>
+                                    <span> — packaged with Functional TextBuild Standard</span>
+                                </li>
+                                <li>
+                                    <strong>JargonLinker_docs_v1.4.zip</strong>
+                                    <span> — code + docs + copyright</span>
+                                </li>
+                                <li>
+                                    <strong>DigitalFootprint_phase1_report.pdf</strong>
+                                    <span> — broker site list &amp; notes</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card kai-log-card">
+                            <div class="card-header-row">
+                                <h2>Kai Notes</h2>
+                                <button class="btn small subtle" id="clear-log-btn">Clear</button>
+                            </div>
+                            <div class="kai-log-body" id="kai-log">
+                                <div class="kai-log-entry">[--:--] Ready when you are. Use the command box above or click a module to begin.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULES -->
+                <div class="section" id="section-modules">
+                    <h1>Modules</h1>
+                    <p class="section-intro">
+                        Core OmniAI modules currently defined in your ecosystem. These are just launch
+                        points – we can wire in real backends as you’re ready.
+                    </p>
+
+                    <div class="modules-toolbar">
+                        <input
+                            type="text"
+                            id="module-search"
+                            class="modules-search"
+                            placeholder="Filter modules by name or description..."
+                        />
+                    </div>
+
+                    <div class="grid grid-3" id="modules-grid">
+                        <div
+                            class="card module-card"
+                            data-module-name="Jargon Linker"
+                            data-module-keywords="jargon linker definitions spa dictionary"
+                        >
+                            <h2>Jargon Linker</h2>
+                            <p>SPA for storing, searching, and categorizing your personal definitions.</p>
+                            <button class="btn primary" data-action="launch-jargon">Open Module</button>
+                        </div>
+
+                        <div
+                            class="card module-card"
+                            data-module-name="Math / Tutor Engine"
+                            data-module-keywords="math tutor graphs pdf study"
+                        >
+                            <h2>Math / Tutor Engine</h2>
+                            <p>Step-by-step explanations, graphs, and PDF study packs in your standard format.</p>
+                            <button class="btn" data-action="launch-math">Open Module</button>
+                        </div>
+
+                        <div
+                            class="card module-card"
+                            data-module-name="Network / DNS Lab Assistant"
+                            data-module-keywords="network dns seedlabs wireshark"
+                        >
+                            <h2>Network / DNS Lab Assistant</h2>
+                            <p>Guides for SEED labs, DNS configs, and Wireshark workflows.</p>
+                            <button class="btn" data-action="launch-network">Open Module</button>
+                        </div>
+
+                        <div
+                            class="card module-card"
+                            data-module-name="Digital Footprint Removal"
+                            data-module-keywords="digital footprint brokers spokeo mylife privacy"
+                        >
+                            <h2>Digital Footprint Removal</h2>
+                            <p>Track brokers (Spokeo, MyLife, etc.) and your removal progress.</p>
+                            <button class="btn" data-action="launch-footprint">Open Module</button>
+                        </div>
+
+                        <div
+                            class="card module-card"
+                            data-module-name="Kai Consciousness / Standards"
+                            data-module-keywords="kai standards hit me transcend functional textbuild"
+                        >
+                            <h2>Kai Consciousness / Standards</h2>
+                            <p>
+                                View and manage standards: Transcend, Functional TextBuild, Index, Copyright Standard.
+                            </p>
+                            <button class="btn" data-action="open-standards">Open Standards View</button>
+                        </div>
+
+                        <div
+                            class="card module-card"
+                            data-module-name="OmniAI Sandbox (Core)"
+                            data-module-keywords="omni ai sandbox core blueprints"
+                        >
+                            <h2>OmniAI Sandbox (Core)</h2>
+                            <p>Blueprints, versioning, and future modules for the bigger ecosystem.</p>
+                            <button class="btn" data-action="open-blueprint">Open Sandbox</button>
+                        </div>
+                    </div>
+
+                    <div class="card module-host-card">
+                        <h2>Module Viewer</h2>
+                        <p class="muted">
+                            When you launch a module (like Jargon Linker), it will load here inside the OmniAI console.
+                        </p>
+                        <div class="module-host-frame-wrapper">
+                            <iframe
+                                id="module-frame"
+                                src=""
+                                class="module-frame"
+                                title="OmniAI Module Viewer"
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WORKSPACES -->
+                <div class="section" id="section-workspaces">
+                    <h1>Workspaces</h1>
+                    <p class="section-intro">
+                        Named environments for different projects. Think of these as save slots / universes.
+                    </p>
+                    <div class="card">
+                        <ul class="workspace-list">
+                            <li
+                                data-workspace-id="DFR-Phase1"
+                                data-workspace-title="Digital Footprint Removal – Phase 1"
+                                data-workspace-status="Active"
+                                data-workspace-notes="Focus: removing Dennis Caspar Hawkins from major broker sites (Spokeo, MyLife, FastPeopleSearch, etc.). Track which sites have been processed and which are pending."
+                            >
+                                <div class="workspace-name">DFR-Phase1</div>
+                                <div class="workspace-meta">Digital Footprint Removal – Phase 1</div>
+                                <button class="btn small" data-workspace-action="open">Open</button>
+                            </li>
+                            <li
+                                data-workspace-id="JLinker-Dev"
+                                data-workspace-title="Jargon Linker – Dev &amp; Testing"
+                                data-workspace-status="Pinned"
+                                data-workspace-notes="Work-in-progress environment for new Jargon Linker features such as recovery system, profiles, analytics, and advanced categories."
+                            >
+                                <div class="workspace-name">JLinker-Dev</div>
+                                <div class="workspace-meta">Jargon Linker feature dev &amp; testing</div>
+                                <button class="btn small" data-workspace-action="open">Open</button>
+                            </li>
+                            <li
+                                data-workspace-id="OmniAI-Lab"
+                                data-workspace-title="OmniAI Sandbox / Kai Consciousness Lab"
+                                data-workspace-status="Sandbox"
+                                data-workspace-notes="Experimental zone for testing new Kai behaviors, UI concepts, and standards before pushing them into your main workflows."
+                            >
+                                <div class="workspace-name">OmniAI-Lab</div>
+                                <div class="workspace-meta">OmniAI sandbox + Kai consciousness experiments</div>
+                                <button class="btn small" data-workspace-action="open">Open</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="card workspace-details" id="workspace-details">
+                        <h2>Workspace Details</h2>
+                        <p class="muted" id="workspace-details-placeholder">
+                            Select a workspace above to see its status, notes, and focus.
+                        </p>
+                        <div id="workspace-details-body"></div>
+                    </div>
+                </div>
+
+                <!-- ARCHIVES -->
+                <div class="section" id="section-archives">
+                    <h1>Archives / Transcend</h1>
+                    <p class="section-intro">
+                        A future spot to visualize every bundle, PDF, and code package you’ve generated via
+                        “Transcend”.
+                    </p>
+                    <div class="card">
+                        <p>
+                            For now, this is a placeholder. When we wire it up, this page will show:
+                        </p>
+                        <ul class="simple-list">
+                            <li>Timeline of all Transcend events</li>
+                            <li>Download links for ZIPs and PDFs</li>
+                            <li>Tags by project, course, or phase</li>
+                            <li>Version info and notes</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SETTINGS -->
+                <div class="section" id="section-settings">
+                    <h1>Kai Core / Settings</h1>
+                    <p class="section-intro">
+                        High-level standards and knobs that define how OmniAI behaves for you.
+                    </p>
+                    <div class="grid grid-2">
+                        <div class="card">
+                            <h2>Behavior Standards</h2>
+                            <ul class="simple-list">
+                                <li>“Hit me” ⇒ full code bundle, ready-to-run.</li>
+                                <li>“Transcend” ⇒ package latest relevant discussion into ZIP/PDF.</li>
+                                <li>Functional TextBuild Standard ⇒ code + .txt mirrors.</li>
+                                <li>Standard PDF Style ⇒ Times New Roman, 12pt, .5&quot; margins.</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h2>Identity</h2>
+                            <p>
+                                User: <strong>Dennis Caspar Hawkins</strong><br />
+                                Assistant Persona: <strong>Kai</strong><br />
+                                Project: <strong>OmniAI Sandbox / Kai Consciousness</strong>
+                            </p>
+                            <p class="muted">
+                                Eventually, this panel can manage signature frameworks, verification, and
+                                copyright profiles.
+                            </p>
+                        </div>
+                        <div class="card">
+                            <h2>Core Code &amp; Files</h2>
+                            <ul class="simple-list">
+                                <li>
+                                    <strong>OmniAI Operation Code (Python)</strong><br />
+                                    <span>Location: <code>core/omniai-python/</code></span>
+                                </li>
+                                <li>
+                                    <strong>OmniAI Operation Code (Java)</strong><br />
+                                    <span>Location: <code>core/omniai-java/</code></span>
+                                </li>
+                                <li>
+                                    <strong>Kai Consciousness / Standards</strong><br />
+                                    <span>Location: <code>core/kai-consciousness/</code></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
