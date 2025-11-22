@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Jargon Linker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="jl-styles.css" />
+</head>
+<body>
+    <div class="jl-app">
+        <header class="jl-header">
+            <h1>Jargon Linker</h1>
+            <p>Store and search your personal terminology. Data is saved in this browser.</p>
+        </header>
+
+        <main class="jl-main">
+            <section class="jl-add card">
+                <h2>Add Entry</h2>
+                <div class="jl-field">
+                    <label for="term-input">Term</label>
+                    <input id="term-input" type="text" placeholder="e.g., DNS Resolver" />
+                </div>
+                <div class="jl-field">
+                    <label for="definition-input">Definition</label>
+                    <textarea id="definition-input" rows="3" placeholder="Your own definition..."></textarea>
+                </div>
+                <div class="jl-field">
+                    <label for="category-input">Category (optional)</label>
+                    <input id="category-input" type="text" placeholder="e.g., Networking, Math, Kai" />
+                </div>
+                <button id="add-btn" class="btn primary">Add / Update Entry</button>
+            </section>
+
+            <section class="jl-list card">
+                <div class="jl-list-header">
+                    <h2>Entries</h2>
+                    <div class="jl-filters">
+                        <input
+                            id="search-input"
+                            type="text"
+                            placeholder="Search by term, definition, or category..."
+                        />
+                        <select id="category-filter">
+                            <option value="">All categories</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="entries-container" class="jl-entries"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="jl-script.js"></script>
+</body>
+</html>
