@@ -1,7 +1,7 @@
 // ---------------------
 // Config
 // ---------------------
-const BACKEND_URL = "http://127.0.0.1:8000/api/chat"; // change to your Pi IP later if needed
+const BACKEND_URL = "http://:8000/api/chat"; // change to your Pi IP later if needed
 
 // Simple navigation handling
 const navItems = document.querySelectorAll(".nav-item");
