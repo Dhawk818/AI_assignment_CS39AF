@@ -1,3 +1,5 @@
+Click code tab to see a more clear structure. 
+
 AI_assignment_CS39AF-main/
   index.html                 # Main OmniAI Console UI
   styles.css                 # Styling for the UI
