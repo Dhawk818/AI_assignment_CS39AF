@@ -275,7 +275,8 @@ body.sidebar-collapsed .layout {
 /* Inputs & buttons */
 
 .input,
-textarea.input {
+textarea.input,
+select.input {
   width: 100%;
   padding: 0.55rem 0.7rem;
   border-radius: 999px;
@@ -293,8 +294,13 @@ textarea.input {
   min-height: 3.5rem;
 }
 
+select.input {
+  border-radius: 12px;
+}
+
 .input:focus,
-textarea.input:focus {
+textarea.input:focus,
+select.input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px rgba(79, 140, 255, 0.35);
   background: rgba(8, 10, 26, 0.98);
@@ -532,4 +538,16 @@ textarea.input:focus {
   font-size: 0.9rem;
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+/* TTS select row */
+
+.omni-tts-row {
+  margin-top: 0.75rem;
+}
+
+.omni-tts-row .input {
+  border-radius: 12px;
+  height: 2.1rem;
+  font-size: 0.8rem;
 }
