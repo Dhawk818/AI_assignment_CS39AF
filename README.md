@@ -1,3 +1,5 @@
+all code is copyrighted and owned by Dennis Hawkins. 
+
 https://dhawk818.github.io/AI_assignment_CS39AF/
 
 # AI_assignment_CS39AF
