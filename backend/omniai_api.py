@@ -1,4 +1,3 @@
-# backend/omniai_api.py
 """
 OmniAI Demo Text Backend (Flask)
 
@@ -35,7 +34,7 @@ def add_cors_headers(response):
 
 @app.route("/api/ping", methods=["GET"])
 def ping():
-    """Simple health check."""
+    """Simple health check endpoint."""
     return jsonify(
         {
             "status": "ok",
@@ -97,7 +96,8 @@ def generate_reply(message: str) -> str:
         )
 
     # Math / tutor style
-    if any(word in lower for word in ["solve", "equation", "graph", "derivative", "integral"]):
+    math_words = ["solve", "equation", "graph", "derivative", "integral", "limit"]
+    if any(word in lower for word in math_words):
         return (
             "Demo backend (math mode): I don't compute exact answers here, but this "
             "endpoint represents where a real LLM or math engine would respond. "
@@ -106,7 +106,7 @@ def generate_reply(message: str) -> str:
         )
 
     # Network / DNS
-    if "dns" in lower or "resolver" in lower or "wireshark" in lower:
+    if "dns" in lower or "resolver" in lower or "wireshark" in lower or "seedlab" in lower:
         return (
             "Demo backend (network mode): think of me as the place where DNS lab "
             "explanations and Wireshark hints would come from. Right now I'm just "
@@ -114,25 +114,34 @@ def generate_reply(message: str) -> str:
         )
 
     # Digital footprint
-    if "spokeo" in lower or "mylife" in lower or "footprint" in lower:
+    if "spokeo" in lower or "mylife" in lower or "footprint" in lower or "broker" in lower:
         return (
             "Demo backend (digital footprint): this is where you'd track progress "
             "removing your name from broker sites (Spokeo, MyLife, etc.) and ask "
             "for next-step suggestions."
         )
 
-    # Kai / standards
-    if "standard" in lower or "hit me" in lower or "transcend" in lower:
+    # Kai / standards / commands
+    if "standard" in lower or "hit me" in lower or "transcend" in lower or "functional textbuild" in lower:
         return (
             "Demo backend (Kai standards): current standards include 'hit me' for "
             "full code bundles, 'Transcend' for packaging, the Functional TextBuild "
             "Standard, and your PDF / copyright formatting rules."
         )
 
-    # Default: echo-style
+    # OmniAI / general help
+    if "omniai" in lower or "kai" in lower:
+        return (
+            "Demo backend: OmniAI is your personal console around Kai. The UI lets "
+            "you navigate modules like Jargon Linker, Math / Tutor Engine, DNS labs, "
+            "and Digital Footprint tools, while this backend shows how a future LLM "
+            "or service layer could respond to commands."
+        )
+
+    # Default: echo-style explanation
     return (
         "Demo backend: I received your message:\n\n"
-        f"    \"{message}\"\n\n"
+        f'    "{message}"\n\n'
         "In a full system this would be passed to a real LLM, but here it's just "
         "a local Python Flask stub to support your OmniAI assignment."
     )
