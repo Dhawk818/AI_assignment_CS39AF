@@ -19,4 +19,3 @@ AI_assignment_CS39AF-main/
   script.js           # UI logic + backend integration
   backend/
     omniai_api.py     # Flask demo backend (LLM-style text API)
-<img width="1485" height="885" alt="omniai_network_map_v2" src="https://github.com/user-attachments/assets/67dd8890-c2f2-4a5f-99b2-a3119bcfeae0" />
