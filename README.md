@@ -1,4 +1,4 @@
-all code is copyrighted and owned by Dennis Hawkins. 
+
 
 https://dhawk818.github.io/AI_assignment_CS39AF/
 
@@ -171,3 +171,4 @@ At runtime, the system looks like this:
 
 
 
+all code is copyrighted and owned by Dennis Hawkins. 
