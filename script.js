@@ -17,8 +17,17 @@ const modulesGrid = document.getElementById("modules-grid");
 const workspaceDetailsBody = document.getElementById("workspace-details-body");
 const workspaceDetailsPlaceholder = document.getElementById("workspace-details-placeholder");
 
+// Omni Chat elements
+const omniChatForm = document.getElementById("omni-chat-form");
+const omniChatInput = document.getElementById("omni-chat-input");
+const omniChatResponse = document.getElementById("omni-chat-response");
+const omniVoiceBtn = document.getElementById("omni-voice-btn");
+const omniSpeakBtn = document.getElementById("omni-speak-btn");
+const omniStatus = document.getElementById("omni-chat-status");
+
 const sectionTitles = {
     dashboard: "Dashboard",
+    omni: "OmniAI Chat",
     modules: "Modules",
     workspaces: "Workspaces",
     archives: "Archives / Transcend",
@@ -51,7 +60,7 @@ if (clearLogBtn && kaiLog) {
         const baseEntry = document.createElement("div");
         baseEntry.className = "kai-log-entry";
         baseEntry.textContent =
-            "[--:--] Log cleared. OmniAI is ready. Use the command box or module buttons to begin.";
+            "[--:--] Log cleared. OmniAI is ready. Use the command box, Omni Chat tab, or module buttons to begin.";
         kaiLog.appendChild(baseEntry);
     });
 }
@@ -81,6 +90,59 @@ async function sendToBackend(message, source) {
     } catch (err) {
         logToKai("Backend not reachable. Is the Flask server running on port 8000?");
     }
+}
+
+// ---------------------
+// OmniAI Chat panel → backend
+// ---------------------
+async function sendOmniChat(message) {
+    if (!message) {
+        if (omniStatus) omniStatus.textContent = "Type or speak a message first.";
+        return;
+    }
+
+    if (omniStatus) omniStatus.textContent = "Sending to backend...";
+    try {
+        const response = await fetch(BACKEND_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message,
+                source: "omni-chat"
+            })
+        });
+
+        if (!response.ok) {
+            if (omniStatus) omniStatus.textContent = `Backend error (${response.status}).`;
+            logToKai(`Omni chat backend error (${response.status}).`);
+            return;
+        }
+
+        const data = await response.json();
+        const reply = data.reply || "(backend returned no reply)";
+
+        if (omniChatResponse) {
+            omniChatResponse.innerHTML = "";
+            const p = document.createElement("p");
+            p.textContent = reply;
+            omniChatResponse.appendChild(p);
+        }
+
+        if (omniStatus) omniStatus.textContent = "Reply received.";
+        logToKai("Omni chat backend replied.");
+    } catch (err) {
+        if (omniStatus) omniStatus.textContent = "Backend not reachable.";
+        logToKai("Omni chat: backend not reachable (check Flask on port 8000).");
+    }
+}
+
+// Omni Chat form submit
+if (omniChatForm && omniChatInput) {
+    omniChatForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const message = omniChatInput.value.trim();
+        sendOmniChat(message);
+    });
 }
 
 // ---------------------
@@ -201,6 +263,9 @@ function interpretCommand(text) {
     } else if (lower.includes("standard") || lower.includes("kai core") || lower.includes("kai")) {
         switchToSection("settings");
         logToKai("Navigated to Kai Core / Settings via command.");
+    } else if (lower.includes("omni chat") || lower.includes("chat")) {
+        switchToSection("omni");
+        logToKai("Switched to Omni Chat.");
     } else {
         // Anything else: send to backend "LLM" stub
         logToKai(`Command sent to backend: "${text}"`);
@@ -281,4 +346,92 @@ function showWorkspaceDetails(li) {
     `;
 
     logToKai(`Opened workspace: ${id} (${status})`);
+}
+
+// ---------------------
+// Voice input (Web Speech API)
+// ---------------------
+let recognition = null;
+let recognizing = false;
+
+if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+        recognizing = true;
+        if (omniStatus) omniStatus.textContent = "Listening...";
+    };
+
+    recognition.onend = () => {
+        recognizing = false;
+        if (omniStatus) omniStatus.textContent = "Ready.";
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (omniChatInput) {
+            omniChatInput.value = transcript;
+        }
+        sendOmniChat(transcript);
+    };
+
+    recognition.onerror = () => {
+        recognizing = false;
+        if (omniStatus) omniStatus.textContent = "Voice error. Try again.";
+    };
+} else {
+    if (omniStatus) {
+        omniStatus.textContent = "Voice input not supported in this browser.";
+    }
+}
+
+// Voice button click
+if (omniVoiceBtn) {
+    omniVoiceBtn.addEventListener("click", () => {
+        if (!recognition) {
+            if (omniStatus) omniStatus.textContent = "Voice input not supported.";
+            return;
+        }
+        if (!recognizing) {
+            recognition.start();
+        } else {
+            recognition.stop();
+        }
+    });
+}
+
+// ---------------------
+// Speak response (Speech Synthesis)
+// ---------------------
+if (omniSpeakBtn && omniChatResponse) {
+    omniSpeakBtn.addEventListener("click", () => {
+        if (!("speechSynthesis" in window)) {
+            if (omniStatus) omniStatus.textContent = "Speech synthesis not supported.";
+            return;
+        }
+
+        const text = omniChatResponse.textContent.trim();
+        if (!text) {
+            if (omniStatus) omniStatus.textContent = "No response to speak yet.";
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.0;
+        utter.pitch = 1.0;
+        utter.onstart = () => {
+            if (omniStatus) omniStatus.textContent = "Speaking response...";
+        };
+        utter.onend = () => {
+            if (omniStatus) omniStatus.textContent = "Ready.";
+        };
+
+        window.speechSynthesis.speak(utter);
+    });
 }
