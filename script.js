@@ -1,3 +1,17 @@
+
+---
+
+## 3️⃣ Updated `script.js` – wired to the backend
+
+Now update your root `script.js` to include a helper that calls the Flask API.  
+Here is the **full** version with backend support baked in (you can replace your existing `script.js` with this):
+
+```javascript
+// ---------------------
+// Config
+// ---------------------
+const BACKEND_URL = "http://localhost:8000/api/chat"; // change to your Pi IP later if needed
+
 // Simple navigation handling
 const navItems = document.querySelectorAll(".nav-item");
 const sections = document.querySelectorAll(".section");
@@ -21,36 +35,6 @@ const sectionTitles = {
 };
 
 // ---------------------
-// Sidebar navigation
-// ---------------------
-navItems.forEach((item) => {
-    item.addEventListener("click", () => {
-        const sectionKey = item.getAttribute("data-section");
-
-        // Sidebar active state
-        navItems.forEach((i) => i.classList.remove("active"));
-        item.classList.add("active");
-
-        // Content active state
-        switchToSection(sectionKey);
-
-        // Log switch
-        logToKai(`Switched view to: ${sectionTitles[sectionKey] || "OmniAI"}`);
-    });
-});
-
-// ---------------------
-// Sidebar collapse
-// ---------------------
-if (sidebarToggle) {
-    sidebarToggle.addEventListener("click", () => {
-        document.body.classList.toggle("sidebar-collapsed");
-        const collapsed = document.body.classList.contains("sidebar-collapsed");
-        logToKai(collapsed ? "Collapsed navigation sidebar." : "Expanded navigation sidebar.");
-    });
-}
-
-// ---------------------
 // Kai log helpers
 // ---------------------
 function logToKai(message) {
@@ -64,7 +48,6 @@ function logToKai(message) {
 
     kaiLog.prepend(entry);
 
-    // Optional: cap log length to 50 entries
     const entries = kaiLog.querySelectorAll(".kai-log-entry");
     if (entries.length > 50) {
         entries[entries.length - 1].remove();
@@ -79,6 +62,59 @@ if (clearLogBtn && kaiLog) {
         baseEntry.textContent =
             "[--:--] Log cleared. OmniAI is ready. Use the command box or module buttons to begin.";
         kaiLog.appendChild(baseEntry);
+    });
+}
+
+// ---------------------
+// Backend integration (Flask demo API)
+// ---------------------
+async function sendToBackend(message, source) {
+    try {
+        const response = await fetch(BACKEND_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message,
+                source: source || "omni-ui"
+            })
+        });
+
+        if (!response.ok) {
+            logToKai(`Backend error (${response.status}).`);
+            return;
+        }
+
+        const data = await response.json();
+        const reply = data.reply || "(backend returned no reply)";
+        logToKai(`OmniAI backend: ${reply}`);
+    } catch (err) {
+        logToKai("Backend not reachable. Is the Flask server running on port 8000?");
+    }
+}
+
+// ---------------------
+// Sidebar navigation
+// ---------------------
+navItems.forEach((item) => {
+    item.addEventListener("click", () => {
+        const sectionKey = item.getAttribute("data-section");
+
+        navItems.forEach((i) => i.classList.remove("active"));
+        item.classList.add("active");
+
+        switchToSection(sectionKey);
+        logToKai(`Switched view to: ${sectionTitles[sectionKey] || "OmniAI"}`);
+    });
+});
+
+// ---------------------
+// Sidebar collapse
+// ---------------------
+if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", () => {
+        document.body.classList.toggle("sidebar-collapsed");
+        const collapsed = document.body.classList.contains("sidebar-collapsed");
+        logToKai(collapsed ? "Collapsed navigation sidebar." : "Expanded navigation sidebar.");
     });
 }
 
@@ -121,13 +157,13 @@ function handleAction(action) {
             loadModuleInFrame("modules/jargon-linker/index.html", "Jargon Linker");
             break;
         case "launch-math":
-            logToKai("Math / Tutor Engine launch requested.");
+            logToKai("Math / Tutor Engine launch requested (frontend).");
             break;
         case "launch-network":
-            logToKai("Network / DNS Lab Assistant launch requested.");
+            logToKai("Network / DNS Lab Assistant launch requested (frontend).");
             break;
         case "launch-footprint":
-            logToKai("Digital Footprint Removal tools launch requested.");
+            logToKai("Digital Footprint Removal tools launch requested (frontend).");
             break;
         case "open-standards":
             logToKai("Opening Kai standards view.");
@@ -175,7 +211,9 @@ function interpretCommand(text) {
         switchToSection("settings");
         logToKai("Navigated to Kai Core / Settings via command.");
     } else {
-        logToKai(`Command received (not yet mapped): "${text}"`);
+        // Anything else: send to backend "LLM" stub
+        logToKai(`Command sent to backend: "${text}"`);
+        sendToBackend(text, "command-box");
     }
 }
 
@@ -195,13 +233,11 @@ if (commandSuggestions && commandInput) {
 // Section switching helper
 // ---------------------
 function switchToSection(sectionKey) {
-    // Update sidebar active state too (in case we navigated via command)
     navItems.forEach((i) => {
         const key = i.getAttribute("data-section");
         i.classList.toggle("active", key === sectionKey);
     });
 
-    // Update content
     sections.forEach((sec) => sec.classList.remove("active"));
     const activeSection = document.getElementById(`section-${sectionKey}`);
     if (activeSection) {
@@ -252,3 +288,4 @@ function showWorkspaceDetails(li) {
 
     logToKai(`Opened workspace: ${id} (${status})`);
 }
+
