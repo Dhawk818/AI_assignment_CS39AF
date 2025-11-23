@@ -1,12 +1,3 @@
-
----
-
-## 3️⃣ Updated `script.js` – wired to the backend
-
-Now update your root `script.js` to include a helper that calls the Flask API.  
-Here is the **full** version with backend support baked in (you can replace your existing `script.js` with this):
-
-```javascript
 // ---------------------
 // Config
 // ---------------------
@@ -242,6 +233,9 @@ function switchToSection(sectionKey) {
     const activeSection = document.getElementById(`section-${sectionKey}`);
     if (activeSection) {
         activeSection.classList.add("active");
+    }
+
+    if (topbarTitle) {
         topbarTitle.textContent = sectionTitles[sectionKey] || "OmniAI";
     }
 }
@@ -288,4 +282,3 @@ function showWorkspaceDetails(li) {
 
     logToKai(`Opened workspace: ${id} (${status})`);
 }
-
