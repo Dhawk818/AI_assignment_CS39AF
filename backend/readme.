@@ -1,0 +1,19 @@
+# OmniAI Demo Text Backend (Flask)
+
+This folder contains a small Python Flask API that simulates how the
+OmniAI front-end (index.html + script.js) could talk to a backend
+service similar to a small LLM.
+
+- **File:** `omniai_api.py`
+- **Endpoint:** `POST /api/chat` with JSON `{"message": "..."}`
+
+It returns a simple, rule-based reply and some metadata. There is **no**
+real language model here; it is intentionally offline and lightweight,
+just to demonstrate the architecture.
+
+## Running locally
+
+```bash
+pip install flask
+cd backend
+python omniai_api.py
