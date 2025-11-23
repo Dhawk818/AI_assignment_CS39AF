@@ -167,20 +167,5 @@ At runtime, the system looks like this:
   - Python core, Java core, or other tools running on the same machine
   - A future true LLM service
 
-A visual diagram is included in the repo:
-
-```text
-docs/omniai_network_map_v2.png
-
-
-## Project Structure
-
-```text
-AI_assignment_CS39AF-main/
-  index.html          # OmniAI UI (Dashboard, Omni Chat, Modules, Workspaces, etc.)
-  styles.css          # UI styling
-  script.js           # UI logic + backend integration
-  backend/
-    omniai_api.py     # Flask demo backend (LLM-style text API)
 
 
