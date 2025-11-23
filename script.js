@@ -24,6 +24,8 @@ const omniChatResponse = document.getElementById("omni-chat-response");
 const omniVoiceBtn = document.getElementById("omni-voice-btn");
 const omniSpeakBtn = document.getElementById("omni-speak-btn");
 const omniStatus = document.getElementById("omni-chat-status");
+const omniTtsVoiceSelect = document.getElementById("omni-tts-voice");
+let omniVoices = [];
 
 const sectionTitles = {
     dashboard: "Dashboard",
@@ -405,6 +407,41 @@ if (omniVoiceBtn) {
 }
 
 // ---------------------
+// TTS voice selection (playback)
+// ---------------------
+function populateTtsVoices() {
+    if (!("speechSynthesis" in window) || !omniTtsVoiceSelect) return;
+
+    omniVoices = window.speechSynthesis.getVoices();
+    omniTtsVoiceSelect.innerHTML = "";
+
+    const defaultOpt = document.createElement("option");
+    defaultOpt.value = "";
+    defaultOpt.textContent = "System default";
+    omniTtsVoiceSelect.appendChild(defaultOpt);
+
+    omniVoices.forEach((voice, index) => {
+        const opt = document.createElement("option");
+        opt.value = String(index);
+        opt.textContent = `${voice.name} (${voice.lang})`;
+        omniTtsVoiceSelect.appendChild(opt);
+    });
+
+    const preferred = omniVoices.findIndex(v =>
+        v.lang.toLowerCase().startsWith("en") &&
+        /female|woman|samantha|aria|zoe|jenny/i.test(v.name)
+    );
+    if (preferred >= 0) {
+        omniTtsVoiceSelect.value = String(preferred);
+    }
+}
+
+if ("speechSynthesis" in window) {
+    populateTtsVoices();
+    window.speechSynthesis.onvoiceschanged = populateTtsVoices;
+}
+
+// ---------------------
 // Speak response (Speech Synthesis)
 // ---------------------
 if (omniSpeakBtn && omniChatResponse) {
@@ -423,8 +460,18 @@ if (omniSpeakBtn && omniChatResponse) {
         window.speechSynthesis.cancel();
 
         const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.0;
-        utter.pitch = 1.0;
+
+        if (omniTtsVoiceSelect && omniVoices.length > 0) {
+            const idx = parseInt(omniTtsVoiceSelect.value, 10);
+            if (!isNaN(idx) && omniVoices[idx]) {
+                utter.voice = omniVoices[idx];
+            }
+        }
+
+        // Slightly slower, slightly higher pitch for a calmer, warmer feel
+        utter.rate = 0.95;
+        utter.pitch = 1.1;
+
         utter.onstart = () => {
             if (omniStatus) omniStatus.textContent = "Speaking response...";
         };
